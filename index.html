@@ -19,10 +19,10 @@
       min-width: 100vw;
       margin: 0;
       padding: 0;
-      /* Center the main app horizontally and vertically */
       display: flex;
       align-items: center;
       justify-content: center;
+      overflow: hidden;
     }
     .app-center-container {
       display: flex;
@@ -30,6 +30,15 @@
       justify-content: center;
       min-height: 0;
       min-width: 0;
+      width: 100vw;
+      height: 100vh;
+      overflow: hidden;
+    }
+    .scaling-outer {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transform-origin: center center;
     }
     .scaling-wrapper {
       display: flex;
@@ -40,7 +49,6 @@
       height: 500px;
       width: auto;
       display: block;
-      /* No responsive rules: fixed height, natural width */
     }
     .note-container {
       display: flex;
@@ -87,9 +95,11 @@
 </head>
 <body>
   <div class="app-center-container">
-    <div class="scaling-wrapper">
-      <img id="recorderImage" src="https://eagleviewmusic.com/images/Recorder%20Pngs0001.png" alt="Recorder" />
-      <div class="note-container" id="noteContainer"></div>
+    <div class="scaling-outer" id="scaling-outer">
+      <div class="scaling-wrapper" id="scaling-wrapper">
+        <img id="recorderImage" src="https://eagleviewmusic.com/images/Recorder%20Pngs0001.png" alt="Recorder" />
+        <div class="note-container" id="noteContainer"></div>
+      </div>
     </div>
   </div>
   <script>
@@ -246,6 +256,19 @@
         image.src = "https://eagleviewmusic.com/images/Recorder%20Pngs0001.png";
       }
     }, { passive: true });
+
+    // Responsive scaling: shrink the whole app proportionally if needed (height only)
+    function updateScale() {
+      const outer = document.getElementById('scaling-outer');
+      // DESIGN SIZE: height = 500px (matches recorder image)
+      const designHeight = 500;
+      const availableHeight = window.innerHeight * 0.98;
+      const scale = Math.min(1, availableHeight / designHeight);
+      outer.style.transform = `scale(${scale})`;
+    }
+    window.addEventListener('resize', updateScale);
+    window.addEventListener('load', updateScale);
+    updateScale();
   </script>
 </body>
 </html>
